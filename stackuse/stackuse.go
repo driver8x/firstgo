@@ -1,3 +1,4 @@
+// For testing "github.com/driver8x/firstgo/gostack"
 package main
 
 import (

@@ -1,3 +1,4 @@
+// Package sortedlist implements a sorted linked list of integers
 package sortedlist
 
 import (
@@ -16,7 +17,7 @@ type List struct {
 // Add adds value int to list in the correct sorted location
 func (list *List) Add(value int) {
 	if list.Head == nil {
-		list.Head = &Element{-1, nil} // dummy head node simplifys iteration
+		list.Head = &Element{-1, nil} // dummy head node simplifies iteration
 	}
 	if list.Head.Next == nil {
 		list.Head.Next = &Element{value, nil}
@@ -82,6 +83,6 @@ func (list *List) Max() (value int, err error) {
 // EmptyListError is returned when an operation can't be performed due a list being empty
 type EmptyListError struct{}
 
-func (err *EmptyListError) Error() (string) {
+func (err *EmptyListError) Error() string {
 	return "Error attempting to read from empty list"
 }

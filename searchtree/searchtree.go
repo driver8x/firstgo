@@ -1,6 +1,6 @@
 package searchtree
 
-import(
+import (
 	"strings"
 )
 

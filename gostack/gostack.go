@@ -1,11 +1,11 @@
 /*
 Package gostack implements a simple stack of integers implemented using a linked list
- */
+*/
 package gostack
 
 type node struct {
 	Next *node
-	Val int
+	Val  int
 }
 
 type Stack struct {
@@ -19,14 +19,14 @@ func (s *Stack) Push(i int) {
 }
 
 // Pop removes and returns the integer at the top of the stack
-func (s *Stack) Pop() (int) {
+func (s *Stack) Pop() int {
 	temp := s.Head.Val
 	s.Head = s.Head.Next
 	return temp
 }
 
 // NewStack creates and returns a new Stack and optionally initializes it with a given list of integers
-func NewStack(input ...int) (*Stack) {
+func NewStack(input ...int) *Stack {
 	s := &Stack{nil, nil}
 	for _, v := range input {
 		s.Push(v)
@@ -49,7 +49,7 @@ func (q *Queue) Enqueue(i int) {
 }
 
 // Dequeue removes and returns the int at the front of the queue
-func (q *Queue) Dequeue() (int) {
+func (q *Queue) Dequeue() int {
 	var temp int
 	if q.Head != nil {
 		temp = q.Head.Val
@@ -62,7 +62,7 @@ func (q *Queue) Dequeue() (int) {
 }
 
 // NewQueue creates and returns a new Queue and optionally initializes it with a given list of integers
-func NewQueue(input ...int) (*Queue) {
+func NewQueue(input ...int) *Queue {
 	q := &Queue{nil, nil}
 	for _, v := range input {
 		q.Enqueue(v)
