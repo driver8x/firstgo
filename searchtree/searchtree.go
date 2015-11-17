@@ -1,30 +1,95 @@
+// searchtree is a trie implementation that allows that addition of strings associated with slices of integers and
+// fast prefix searching of said strings
 package searchtree
 
 import (
-	"strings"
+	"fmt"
+	"unicode/utf8"
 )
 
-type Node struct {
-	Val      byte
-	Children []*Node
+type node struct {
+	name     string         // string to search on
+	val      []int          // data associated with the string
+	children map[rune]*node // map of any child nodes keyed on their next rune after the current name
 }
 
 type Tree struct {
-	Head *Node
+	head *node
 }
 
-func (t *Tree) Add(name string) {
-	if t.Head == nil {
-		t.Head = &Node{' ', make([]*Node, 26)}
+// Add adds a given string to the trie and associates a slice of ints data with it
+func (t *Tree) Add(name string, data []int) {
+	if t.head == nil {
+		t.init()
+	}
+	cur := t.head
+
+	i := 0
+	for idx, val := range name {
+		i = idx
+		if _, ok := cur.children[val]; ok {
+			cur = cur.children[val]
+		} else {
+			break
+		}
 	}
 
-	chars := []byte(strings.ToLower(name))
-	curnode := t.Head
-	for _, v := range chars {
-		idx := int(v - 'a')
-		if curnode.Children[idx] == nil {
-			curnode.Children[idx] = &Node{v, make([]*Node, 26)}
+	for j, val := range name {
+		if j < i {
+			continue
+		} else if rl := utf8.RuneLen(val); j+rl <= len(name) {
+			cur.children[val] = &node{name[:j+rl], nil, make(map[rune]*node)}
+			cur = cur.children[val]
 		}
-		curnode = curnode.Children[idx]
 	}
+	cur.val = data
+}
+
+// Find searches the trie for any entries with the given prefix and returns a map of strings to slices of ints
+func (t *Tree) Find(name string) (results map[string][]int, err error) {
+	results = make(map[string][]int)
+	if t.head == nil {
+		t.init()
+	}
+	cur := t.head
+	for i, r := range name {
+		if _, ok := cur.children[r]; !ok {
+			return nil, &PrefixNotFoundError{name, i}
+		}
+		cur = cur.children[r]
+	}
+
+	datanodes := traverse(cur)
+	for _, n := range datanodes {
+		results[n.name] = n.val
+	}
+
+	return results, nil
+}
+
+// traverse recursively searches a node and returns a slice containing pointers to all nodes with a non-nil value
+func traverse(n *node) (coll []*node) {
+	if n.val != nil {
+		coll = []*node{n}
+	}
+	for _, v := range n.children {
+		vals := traverse(v)
+		coll = append(vals, coll...)
+	}
+	return coll
+}
+
+// init creates a dummy head node for the trie
+func (t *Tree) init() {
+	t.head = &node{"", nil, make(map[rune]*node)}
+}
+
+// PrefixNotFoundError is returned when no strings with a given prefix could be found in the try
+type PrefixNotFoundError struct {
+	name  string
+	index int
+}
+
+func (p *PrefixNotFoundError) Error() string {
+	return fmt.Sprintf("\"%v\" not found. Stopped at index %v (%v).", p.name, p.index, p.name[:p.index+1])
 }
