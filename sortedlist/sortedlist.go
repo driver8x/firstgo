@@ -5,26 +5,26 @@ import (
 	"fmt"
 )
 
-type Element struct {
+type element struct {
 	Value int
-	Next  *Element
+	Next  *element
 }
 
 type List struct {
-	Head *Element
+	head *element
 }
 
 // Add adds value int to list in the correct sorted location
 func (list *List) Add(value int) {
-	if list.Head == nil {
-		list.Head = &Element{-1, nil} // dummy head node simplifies iteration
+	if list.head == nil {
+		list.head = &element{-1, nil} // dummy head node simplifies iteration
 	}
-	if list.Head.Next == nil {
-		list.Head.Next = &Element{value, nil}
+	if list.head.Next == nil {
+		list.head.Next = &element{value, nil}
 	} else {
-		for cur, next := list.Head, list.Head.Next; cur != nil; cur, next = next, next.Next {
+		for cur, next := list.head, list.head.Next; cur != nil; cur, next = next, next.Next {
 			if next == nil || value <= next.Value {
-				cur.Next = &Element{value, next}
+				cur.Next = &element{value, next}
 				break
 			}
 		}
@@ -33,8 +33,8 @@ func (list *List) Add(value int) {
 
 // PrintAll prints all of the elements
 func (list *List) PrintAll() {
-	if list.Head != nil && list.Head.Next != nil {
-		for cur := list.Head.Next; cur != nil; cur = cur.Next {
+	if list.head != nil && list.head.Next != nil {
+		for cur := list.head.Next; cur != nil; cur = cur.Next {
 			fmt.Print(cur.Value, " ")
 		}
 	}
@@ -44,8 +44,8 @@ func (list *List) PrintAll() {
 // Remove removes all instances of value from the list and returns the number of elements that were removed
 func (list *List) Remove(value int) (count int) {
 	count = 0
-	if list.Head != nil && list.Head.Next != nil {
-		for prev, cur := list.Head, list.Head.Next; cur != nil; cur = cur.Next {
+	if list.head != nil && list.head.Next != nil {
+		for prev, cur := list.head, list.head.Next; cur != nil; cur = cur.Next {
 			if value == cur.Value {
 				prev.Next = cur.Next
 				count++
@@ -59,8 +59,8 @@ func (list *List) Remove(value int) (count int) {
 
 // Min returns the min value. If the list is empty, it returns an error
 func (list *List) Min() (value int, err error) {
-	if list.Head != nil && list.Head.Next != nil {
-		value = list.Head.Next.Value
+	if list.head != nil && list.head.Next != nil {
+		value = list.head.Next.Value
 	} else {
 		err = &EmptyListError{}
 	}
@@ -69,8 +69,8 @@ func (list *List) Min() (value int, err error) {
 
 // Max returns the max value. If the list is empty, it returns an error
 func (list *List) Max() (value int, err error) {
-	if list.Head != nil && list.Head.Next != nil {
-		cur := list.Head.Next
+	if list.head != nil && list.head.Next != nil {
+		cur := list.head.Next
 		for ; cur.Next != nil; cur = cur.Next {
 		}
 		value = cur.Value
