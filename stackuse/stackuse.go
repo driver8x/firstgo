@@ -51,10 +51,8 @@ func main() {
 
 	fmt.Println("\n\n")
 
-
-
 	var s2 *gostack.Stack
-	s2.Push(8);
-	s2.Push(1337);
-	fmt.Println(s2.Pop());
+	s2.Push(8)
+	s2.Push(1337)
+	fmt.Println(s2.Pop())
 }

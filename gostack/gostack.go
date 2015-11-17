@@ -12,7 +12,7 @@ type Stack struct {
 	head *node
 }
 
-type EmptyStackError struct {}
+type EmptyStackError struct{}
 
 func (e *EmptyStackError) Error() string {
 	return "Attempted to pop from an empty stack."
@@ -47,13 +47,12 @@ func NewStack(input ...int) *Stack {
 	return s
 }
 
-
 // Queue implements a queue of integers using a stack. Dequeue is inefficient.
 type Queue struct {
 	stack *Stack
 }
 
-type EmptyQueueError struct {}
+type EmptyQueueError struct{}
 
 func (e *EmptyQueueError) Error() string {
 	return "Attempted to Dequeue from an empty queue"
@@ -101,7 +100,6 @@ func NewQueue(input ...int) (q *Queue) {
 	}
 	return q
 }
-
 
 //// Enqueue adds an int to the back of the queue
 //func (s *Stack) Enqueue(val int) {

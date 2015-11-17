@@ -24,7 +24,7 @@ func (t *Tree) Add(name string, data []int) {
 	}
 	cur := t.head
 
-	i := 0
+	i := -1
 	for idx, val := range name {
 		i = idx
 		if _, ok := cur.children[val]; ok {
@@ -35,11 +35,14 @@ func (t *Tree) Add(name string, data []int) {
 	}
 
 	for j, val := range name {
+		rl := utf8.RuneLen(val)
 		if j < i {
 			continue
-		} else if rl := utf8.RuneLen(val); j+rl <= len(name) {
-			cur.children[val] = &node{name[:j+rl], nil, make(map[rune]*node)}
-			cur = cur.children[val]
+		} else if j+rl <= len(name) {
+			if _, ok := cur.children[val]; !ok && cur.name != name {
+				cur.children[val] = &node{name[:j+rl], nil, make(map[rune]*node)}
+				cur = cur.children[val]
+			}
 		}
 	}
 	cur.val = data
@@ -65,6 +68,27 @@ func (t *Tree) Find(name string) (results map[string][]int, err error) {
 	}
 
 	return results, nil
+}
+
+// Remove searches the trie for any entries with the given prefix and removes them from the trie, returning the number of elements removed
+func (t *Tree) Remove(name string) (number int, err error) {
+	if t.head == nil {
+		t.init()
+	}
+	cur := t.head
+	for i, r := range name {
+		if _, ok := cur.children[r]; !ok {
+			return 0, &PrefixNotFoundError{name, i}
+		}
+		cur = cur.children[r]
+	}
+
+	datanodes := traverse(cur)
+	number = len(datanodes)
+	cur.val = nil
+	cur.children = make(map[rune]*node)
+
+	return number, nil
 }
 
 // traverse recursively searches a node and returns a slice containing pointers to all nodes with a non-nil value
