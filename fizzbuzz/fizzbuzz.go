@@ -4,6 +4,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -11,10 +12,15 @@ import (
 func main() {
 	flag.Parse()
 	//n, a, b := 100, 3, 5
-	n, _ := strconv.Atoi(flag.Arg(0)) // max range
-	a, _ := strconv.Atoi(flag.Arg(1)) // Fizz
-	b, _ := strconv.Atoi(flag.Arg(2)) // Buzz
+	n, err1 := strconv.Atoi(flag.Arg(0)) // max range
+	a, err2 := strconv.Atoi(flag.Arg(1)) // Fizz
+	b, err3 := strconv.Atoi(flag.Arg(2)) // Buzz
 
+	if err1 != nil || err2 != nil || err3 != nil {
+		fmt.Println("Please supply numbers for N, fizz, and buzz.")
+		fmt.Println("Ex: fizzbuzz 200 5 7")
+		os.Exit(1)
+	}
 	astr := strconv.Itoa(a)
 	bstr := strconv.Itoa(b)
 
