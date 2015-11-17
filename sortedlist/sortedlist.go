@@ -2,7 +2,9 @@
 package sortedlist
 
 import (
+	"bytes"
 	"fmt"
+	"strconv"
 )
 
 type element struct {
@@ -33,12 +35,17 @@ func (list *List) Add(value int) {
 
 // PrintAll prints all of the elements
 func (list *List) PrintAll() {
+	var buff bytes.Buffer
 	if list.head != nil && list.head.Next != nil {
 		for cur := list.head.Next; cur != nil; cur = cur.Next {
-			fmt.Print(cur.Value, " ")
+			temp := strconv.Itoa(cur.Value)
+			buff.WriteString(temp)
+			if cur.Next != nil {
+				buff.WriteString(", ")
+			}
 		}
 	}
-	fmt.Println()
+	fmt.Println(buff.String())
 }
 
 // Remove removes all instances of value from the list and returns the number of elements that were removed

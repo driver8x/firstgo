@@ -7,7 +7,8 @@ import (
 )
 
 func main() {
-	list1 := &sortedlist.List{}
+	//list1 := &sortedlist.List{}
+	var list1 sortedlist.List
 	list1.PrintAll()
 	list1.Add(25)
 	list1.PrintAll()
