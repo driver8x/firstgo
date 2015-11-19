@@ -20,17 +20,12 @@ func (e *EmptyStackError) Error() string {
 
 // Push adds in integer to the top of the stack
 func (s *Stack) Push(val int) {
-	if s == nil {
-		panic("Attempted operation on uninitialized Stack variable")
-	}
 	s.head = &node{s.head, val}
 }
 
 // Pop removes and returns the integer at the top of the stack
 func (s *Stack) Pop() (val int, err error) {
-	if s == nil {
-		panic("Attempted operation on uninitialized Stack variable")
-	} else if s.head == nil {
+	if s.head == nil {
 		return 0, &EmptyStackError{}
 	}
 	val = s.head.Val
@@ -47,9 +42,10 @@ func NewStack(input ...int) *Stack {
 	return s
 }
 
-// Queue implements a queue of integers using a stack. Dequeue is inefficient.
+// Queue implements a queue of integers using two Stacks.
 type Queue struct {
-	stack *Stack
+	stack1 *Stack
+	stack2 *Stack
 }
 
 type EmptyQueueError struct{}
@@ -60,36 +56,39 @@ func (e *EmptyQueueError) Error() string {
 
 // Enqueue adds an int to the back of the queue
 func (q *Queue) Enqueue(val int) {
-	if q == nil {
-		panic("Attempted operation on uninitialized Queue variable")
-	} else if q.stack == nil {
-		q.stack = NewStack(val)
+	if q.stack1 == nil {
+		q.stack1 = NewStack(val)
 	} else {
-		q.stack.Push(val)
+		q.stack1.Push(val)
 	}
 }
 
 // Dequeue removes and returns the int at the front of the queue
 func (q *Queue) Dequeue() (val int, err error) {
-	if q == nil {
-		panic("Attempted operation on uninitialized Queue variable")
-	} else if q.stack == nil {
+
+	if q.stack1 == nil {
 		return 0, &EmptyQueueError{}
 	}
-	temp, err := q.stack.Pop()
+	if q.stack2 != nil {
+		if temp, err := q.stack2.Pop(); err == nil {
+			return temp, nil
+		}
+	}
+
+	temp, err := q.stack1.Pop()
 	if err != nil {
 		return 0, &EmptyQueueError{}
 	}
+	q.stack2 = new(Stack)
 	for {
 		val = temp
-		temp, err = q.stack.Pop()
+		temp, err = q.stack1.Pop()
 		if err == nil {
-			defer q.stack.Push(val)
+			q.stack2.Push(val)
 		} else {
-			break
+			return val, nil
 		}
 	}
-	return val, nil
 }
 
 // NewQueue creates and returns a new Queue and optionally initializes it with a given list of integers
@@ -100,35 +99,3 @@ func NewQueue(input ...int) (q *Queue) {
 	}
 	return q
 }
-
-//// Enqueue adds an int to the back of the queue
-//func (s *Stack) Enqueue(val int) {
-//	newnode := &node{nil, val}
-//	if s.Head == nil {
-//		s.Head = newnode
-//	} else {
-//		tail := s.Head
-//		for ; tail.Next != nil; tail = tail.Next {
-//		}
-//		tail.Next = newnode
-//	}
-//}
-//
-//// Dequeue removes and returns the int at the front of the queue
-//func (s *Stack) Dequeue() (val int, err error) {
-//	if s.Head == nil {
-//		return 0, &EmptyStackError{}
-//	}
-//	val = s.Head.Val
-//	s.Head = s.Head.Next
-//	return val, nil
-//}
-//
-//// NewQueue creates and returns a new Queue and optionally initializes it with a given list of integers
-//func NewQueue(input ...int) *Stack {
-//	q := &Stack{nil}
-//	for _, v := range input {
-//		q.Enqueue(v)
-//	}
-//	return q
-//}

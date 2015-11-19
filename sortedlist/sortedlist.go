@@ -51,11 +51,15 @@ func (list *List) PrintAll() {
 // Remove removes all instances of value from the list and returns the number of elements that were removed
 func (list *List) Remove(value int) (count int) {
 	count = 0
+	found := false
 	if list.head != nil && list.head.Next != nil {
 		for prev, cur := list.head, list.head.Next; cur != nil; cur = cur.Next {
 			if value == cur.Value {
 				prev.Next = cur.Next
 				count++
+				found = true
+			} else if found {
+				break
 			} else {
 				prev = cur
 			}
