@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-var tree1 searchtree.Tree
+var tree1 searchtree.Trie
 
 func TestMain(m *testing.M) {
 	infile, err := os.Open("../dict.txt")

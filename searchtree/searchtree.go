@@ -13,53 +13,58 @@ type node struct {
 	children map[rune]*node // map of any child nodes keyed on their next rune after the current name
 }
 
-type Tree struct {
+type Trie struct {
 	head *node
 }
 
-// Add adds a given string to the trie and associates a slice of ints data with it
-func (t *Tree) Add(name string, data []int) {
+func (t *Trie) Add(name string, data []int) {
+	nm := []byte(name)
 	if t.head == nil {
 		t.init()
 	}
 	cur := t.head
 
-	i := -1
-	for idx, val := range name {
-		i = idx
-		if _, ok := cur.children[val]; ok {
-			cur = cur.children[val]
+	i := 0
+	for i < len(nm) {
+		r, size := utf8.DecodeRune(nm[i:])
+		if _, ok := cur.children[r]; ok {
+			cur = cur.children[r]
+			i += size
 		} else {
 			break
 		}
 	}
 
-	for j, val := range name {
-		rl := utf8.RuneLen(val)
-		if j < i {
-			continue
-		} else if j+rl <= len(name) {
-			if _, ok := cur.children[val]; !ok && cur.name != name {
-				cur.children[val] = &node{name[:j+rl], nil, make(map[rune]*node)}
-				cur = cur.children[val]
+	for i < len(nm) {
+		r, size := utf8.DecodeRune(nm[i:])
+		if i+size <= len(nm) {
+			if _, ok := cur.children[r]; !ok && cur.name != name {
+				cur.children[r] = &node{name[:i+size], nil, make(map[rune]*node)}
+				cur = cur.children[r]
+				i += size
 			}
 		}
 	}
+
 	cur.val = data
 }
 
 // Find searches the trie for any entries with the given prefix and returns a map of strings to slices of ints
-func (t *Tree) Find(name string) (results map[string][]int, err error) {
+func (t *Trie) Find(name string) (results map[string][]int, err error) {
+	nm := []byte(name)
 	results = make(map[string][]int)
 	if t.head == nil {
 		t.init()
 	}
 	cur := t.head
-	for i, r := range name {
+	i := 0
+	for i < len(nm) {
+		r, size := utf8.DecodeRune(nm[i:])
 		if _, ok := cur.children[r]; !ok {
 			return nil, &PrefixNotFoundError{name, i}
 		}
 		cur = cur.children[r]
+		i += size
 	}
 
 	datanodes := traverse(cur)
@@ -71,16 +76,20 @@ func (t *Tree) Find(name string) (results map[string][]int, err error) {
 }
 
 // Remove searches the trie for any entries with the given prefix and removes them from the trie, returning the number of elements removed
-func (t *Tree) Remove(name string) (number int, err error) {
+func (t *Trie) Remove(name string) (number int, err error) {
+	nm := []byte(name)
 	if t.head == nil {
 		t.init()
 	}
 	cur := t.head
-	for i, r := range name {
+	i := 0
+	for i < len(nm) {
+		r, size := utf8.DecodeRune(nm[i:])
 		if _, ok := cur.children[r]; !ok {
 			return 0, &PrefixNotFoundError{name, i}
 		}
 		cur = cur.children[r]
+		i += size
 	}
 
 	datanodes := traverse(cur)
@@ -104,7 +113,7 @@ func traverse(n *node) (coll []*node) {
 }
 
 // init creates a dummy head node for the trie
-func (t *Tree) init() {
+func (t *Trie) init() {
 	t.head = &node{"", nil, make(map[rune]*node)}
 }
 

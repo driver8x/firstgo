@@ -4,6 +4,7 @@ package main
 import (
 	"fmt"
 	"github.com/driver8x/firstgo/gostack"
+	"github.com/driver8x/firstgo/gostackcopy"
 )
 
 func main() {
@@ -51,8 +52,82 @@ func main() {
 
 	fmt.Println("\n\n")
 
-	var s2 *gostack.Stack
+	var s2 gostack.Stack
 	s2.Push(8)
 	s2.Push(1337)
 	fmt.Println(s2.Pop())
+
+	// test using gostackcopy
+	var val int
+	var err error
+	sc := gostackcopy.NewStack(1, 2, 3)
+	sc = sc.Push(4)
+	sc = sc.Push(5)
+	sc, val, err = sc.Pop()
+	fmt.Println(val, err)
+	sc = sc.Push(6)
+	sc, val, err = sc.Pop()
+	fmt.Println(val, err)
+	sc, val, err = sc.Pop()
+	fmt.Println(val, err)
+	sc = sc.Push(7)
+	sc = sc.Push(8)
+	sc = sc.Push(9)
+	sc, val, err = sc.Pop()
+	fmt.Println(val, err)
+	sc, val, err = sc.Pop()
+	fmt.Println(val, err)
+	sc, val, err = sc.Pop()
+	fmt.Println(val, err)
+	sc, val, err = sc.Pop()
+	fmt.Println(val, err)
+	sc, val, err = sc.Pop()
+	fmt.Println(val, err)
+	sc, val, err = sc.Pop()
+	fmt.Println(val, err)
+	sc, val, err = sc.Pop()
+	fmt.Println(val, err)
+	sc, val, err = sc.Pop()
+	fmt.Println(val, err)
+
+	fmt.Println("\n\n")
+
+	qc := gostackcopy.NewQueue(1, 2, 3)
+	qc = qc.Enqueue(4)
+	qc = qc.Enqueue(5)
+	qc, val, err = qc.Dequeue()
+	fmt.Println(val, err)
+	qc = qc.Enqueue(6)
+	qc, val, err = qc.Dequeue()
+	fmt.Println(val, err)
+	qc, val, err = qc.Dequeue()
+	fmt.Println(val, err)
+	qc = qc.Enqueue(7)
+	qc = qc.Enqueue(8)
+	qc = qc.Enqueue(9)
+	qc, val, err = qc.Dequeue()
+	fmt.Println(val, err)
+	qc, val, err = qc.Dequeue()
+	fmt.Println(val, err)
+	qc, val, err = qc.Dequeue()
+	fmt.Println(val, err)
+	qc, val, err = qc.Dequeue()
+	fmt.Println(val, err)
+	qc, val, err = qc.Dequeue()
+	fmt.Println(val, err)
+	qc, val, err = qc.Dequeue()
+	fmt.Println(val, err)
+	qc, val, err = qc.Dequeue()
+	fmt.Println(val, err)
+	qc, val, err = qc.Dequeue()
+	fmt.Println(val, err)
+	fmt.Println(sc, qc)
+
+	fmt.Println("\n\n")
+
+	var sc2 gostackcopy.Stack
+	sc2 = sc2.Push(8)
+	sc2 = sc2.Push(1337)
+	sc2, val, err = sc2.Pop()
+	fmt.Println(val, err)
 }

@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	var tree1 searchtree.Tree
+	var tree1 searchtree.Trie
 
 	//fmt.Println(os.Getwd())
 	infile, err := os.Open("./dict.txt")

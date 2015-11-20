@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	tree1 := searchtree.Tree{}
+	tree1 := searchtree.Trie{}
 	tree1.Add("Abe", []int{69, 2015})
 	tree1.Add("Abel", []int{666})
 	tree1.Add("Abraham", []int{1776, 2015})
@@ -49,6 +49,8 @@ func main() {
 	r4, e4 := tree1.Find("P")
 	fmt.Println(r4, e4)
 
+	fmt.Println()
+
 	tree1.Add("Pat", []int{8})
 	tree1.Add("Patrick", []int{888})
 	tree1.Add("Patri8", []int{88})
@@ -67,10 +69,11 @@ func main() {
 	fmt.Println(r6, e6)
 	tree1.Add("Patri8", []int{888888888888888})
 	tree1.Add("Patri8s", []int{8})
-	tree1.Add("Patri8s", []int{8})
+	tree1.Add("Patri8s", []int{888})
 	tree1.Add("Patri8", []int{888888888888888})
 	tree1.Add("Patri8s", []int{8})
 	fmt.Println(tree1.Remove("Patrick"))
+	fmt.Println(tree1.Remove("Patri8s"))
 	r7, e7 := tree1.Find("Pat")
 	fmt.Println(r7, e7)
 }

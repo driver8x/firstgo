@@ -38,11 +38,16 @@ func main() {
 	list2.Add(3)
 	list2.Add(5)
 	list2.Add(4)
+	list2.Add(5)
+	list2.Add(5)
+	list2.Add(4)
 	list2.PrintAll()
+	fmt.Println(list2.Remove(7)) //0
+	fmt.Println(list2.Remove(4)) //2
+	fmt.Println(list2.Remove(5)) //3
+	fmt.Println(list2.Remove(5)) //0
+	fmt.Println(list2.Min())     //3
 	list2.Remove(3)
-	fmt.Println(list2.Remove(7))
-	fmt.Println(list2.Remove(4))
-	fmt.Println(list2.Remove(5))
-	fmt.Println(list2.Min())
-	fmt.Println(list2.Max())
+	fmt.Println(list2.Max()) //0 error
+	list2.PrintAll()
 }

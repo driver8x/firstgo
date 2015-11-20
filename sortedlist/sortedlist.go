@@ -18,19 +18,8 @@ type List struct {
 
 // Add adds value int to list in the correct sorted location
 func (list *List) Add(value int) {
-	if list.head == nil {
-		list.head = &element{-1, nil} // dummy head node simplifies iteration
-	}
-	if list.head.Next == nil {
-		list.head.Next = &element{value, nil}
-	} else {
-		for cur, next := list.head, list.head.Next; cur != nil; cur, next = next, next.Next {
-			if next == nil || value <= next.Value {
-				cur.Next = &element{value, next}
-				break
-			}
-		}
-	}
+	node := list.findLocation(value)
+	node.Next = &element{value, node.Next}
 }
 
 // PrintAll prints all of the elements
@@ -51,44 +40,44 @@ func (list *List) PrintAll() {
 // Remove removes all instances of value from the list and returns the number of elements that were removed
 func (list *List) Remove(value int) (count int) {
 	count = 0
-	found := false
-	if list.head != nil && list.head.Next != nil {
-		for prev, cur := list.head, list.head.Next; cur != nil; cur = cur.Next {
-			if value == cur.Value {
-				prev.Next = cur.Next
-				count++
-				found = true
-			} else if found {
-				break
-			} else {
-				prev = cur
-			}
-		}
+	node := list.findLocation(value)
+	for node.Next != nil && node.Next.Value == value {
+		node.Next = node.Next.Next
+		count++
 	}
 	return count
 }
 
 // Min returns the min value. If the list is empty, it returns an error
-func (list *List) Min() (value int, err error) {
+func (list *List) Min() (int, error) {
 	if list.head != nil && list.head.Next != nil {
-		value = list.head.Next.Value
+		return list.head.Next.Value, nil
 	} else {
-		err = &EmptyListError{}
+		return 0, &EmptyListError{}
 	}
-	return value, err
 }
 
 // Max returns the max value. If the list is empty, it returns an error
-func (list *List) Max() (value int, err error) {
-	if list.head != nil && list.head.Next != nil {
-		cur := list.head.Next
+func (list *List) Max() (int, error) {
+	if cur := list.head; cur != nil && cur.Next != nil {
 		for ; cur.Next != nil; cur = cur.Next {
 		}
-		value = cur.Value
+		return cur.Value, nil
 	} else {
-		err = &EmptyListError{}
+		return 0, &EmptyListError{}
 	}
-	return value, err
+}
+
+func (list *List) findLocation(value int) *element {
+	if list.head == nil {
+		list.head = &element{-1, nil} // dummy head node simplifies iteration
+	}
+	for cur := list.head; cur != nil; cur = cur.Next {
+		if cur.Next == nil || value <= cur.Next.Value {
+			return cur
+		}
+	}
+	return list.head
 }
 
 // EmptyListError is returned when an operation can't be performed due a list being empty
